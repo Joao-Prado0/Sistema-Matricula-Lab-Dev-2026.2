@@ -61,7 +61,7 @@ java -cp bin <PacotePrincipal>.Main
 
 ### Diagrama de casos de uso
 
-![Diagrama de Casos de Uso do Sistema de Matrículas](docs/DiagramaDeCasoUso.png)
+![Diagrama de Casos de Uso do Sistema de Matrículas](./artefatos/casos-de-uso/DiagramaDeCasoUso.png)
 
 O diagrama contempla os quatro atores do sistema — **Aluno**, **Professor**, **Secretaria** e **Sistema de Cobranças** (ator externo) — e os seguintes casos de uso:
 

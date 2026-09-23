@@ -6,8 +6,6 @@ public abstract class Usuario {
     private String login;
     private String senha;
 
-
-    //setters getters
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -32,9 +30,8 @@ public abstract class Usuario {
         return senha;
     }
 
-    //metodos complexos
-    public boolean autenticar(String login, String senha){
-        return true;
+    public boolean autenticar(String login, String senha) {
+        return this.login != null && this.senha != null
+                && this.login.equals(login) && this.senha.equals(senha);
     }
-
 }

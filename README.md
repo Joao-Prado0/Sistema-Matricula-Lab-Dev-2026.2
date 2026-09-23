@@ -14,6 +14,9 @@ O objetivo é projetar e implementar um sistema que informatize o processo de ma
   - [Diagrama de casos de uso](#diagrama-de-casos-de-uso)
   - [Histórias de usuário](#histórias-de-usuário)
   - [Matriz de rastreabilidade](#matriz-de-rastreabilidade)
+- [Projeto estrutural](#projeto-estrutural)
+  - [Diagrama de classes](#diagrama-de-classes)
+  - [Arquitetura do código](#arquitetura-do-código)
 ---
 
 ## Sobre o projeto
@@ -28,27 +31,31 @@ O sistema atende às seguintes necessidades, conforme especificado pelo Product 
 - Professores podem consultar os alunos matriculados em cada uma de suas disciplinas.
 - Todos os usuários acessam o sistema por meio de login e senha.
 
-Este README documenta a entrega do **Lab01S01** (Modelo de Análise): Diagrama de Casos de Uso e Histórias de Usuário.
+Este README documenta as entregas do **Lab01S01** (Modelo de Análise), **Lab01S02** (Projeto Estrutural) e **Lab01S03** (Protótipo do sistema).
 
 ## Tecnologias utilizadas
 
-- **Java** (Java puro, sem frameworks adicionais nesta etapa do projeto)
+- **Java** (Java puro, sem frameworks adicionais)
+- Persistência em **arquivos de texto (.txt)**, um por entidade, na pasta `data/` (gerada em tempo de execução)
+- Interface em **linha de comando (CLI)**
 
 ## Como executar o projeto
-
-Nesta fase (Lab01S01) o projeto ainda não possui código-fonte implementado — a entrega corresponde exclusivamente aos modelos de análise (diagrama de casos de uso e histórias de usuário) apresentados abaixo. As instruções de execução serão adicionadas a partir do Lab01S02, quando as classes, atributos e stubs de métodos forem criados, e detalhadas com o comando de compilação/execução Java assim que o protótipo estiver disponível (Lab01S03):
 
 ```bash
 # Clonar o repositório
 git clone <url-do-repositorio>
 cd <nome-do-repositorio>
 
-# Compilar (a partir do Lab01S02/S03, quando houver código-fonte)
-javac -d bin src/**/*.java
+# Compilar
+javac -d bin -encoding UTF-8 $(find src -name "*.java")
 
 # Executar
-java -cp bin <PacotePrincipal>.Main
+java -cp bin App
 ```
+
+Na primeira execução, um usuário de Secretaria padrão é criado automaticamente (login `secretaria`, senha `admin`). A partir do menu, a Secretaria pode cadastrar cursos, disciplinas, currículos, alunos, professores e abrir períodos de matrícula; alunos autenticados podem se matricular/cancelar/confirmar matrícula e consultar sua grade; professores podem consultar os alunos matriculados em suas disciplinas.
+
+Todos os dados são persistidos em arquivos `.txt` dentro da pasta `data/` (criada automaticamente), não sendo necessário nenhum banco de dados.
 
 ## Integrantes do grupo
 
@@ -222,3 +229,24 @@ Este documento apresenta a especificação de requisitos do **Sistema de Matríc
 | Professores consultam alunos matriculados em cada disciplina | US09 | Consultar alunos matriculados por disciplina |
 | Validação de acesso via senha para todos os usuários | US01 | Efetuar login |
 | Visualização de grade/status da inscrição pelo aluno | US08 | Consultar grade de matrícula |
+
+## Projeto estrutural
+
+### Diagrama de classes
+
+![Diagrama de Classes do domínio](./artefatos/diagrama-de-classes/DIAGRAMA-DE-CLASSES-LABORATORIO-2-2026-09-14-192722.png)
+
+![Diagrama de Classes das camadas de Service e Repository](./artefatos/diagrama-de-classes/diagrama-classes-repository-and-service.png)
+
+O primeiro diagrama descreve o domínio do sistema (`Usuario`, `Aluno`, `Professor`, `Secretaria`, `Curso`, `Curriculo`, `Disciplina`, `Inscricao`, `Matricula`, `PeriodoMatricula`, além dos enums `StatusDisciplina`, `StatusMatricula`, `TipoInscricao` e da interface `SistemaCobranca`). O segundo detalha a arquitetura em camadas adotada na implementação (Service → Repository → persistência em arquivo), com os repositórios implementando a interface genérica `IArquivoRepository<T>`.
+
+### Arquitetura do código
+
+O código-fonte em [src/](src/) está organizado em pacotes por responsabilidade:
+
+- [model/](src/model/): entidades de domínio e regras de negócio (limites de matrícula, ativação de disciplina, período de matrícula etc.).
+- [enums/](src/enums/): `StatusDisciplina`, `StatusMatricula`, `TipoInscricao`.
+- [interfaces/](src/interfaces/): `SistemaCobranca` (integração externa) e `IArquivoRepository<T>` (contrato genérico de persistência).
+- [repository/](src/repository/): implementações de `IArquivoRepository<T>` que leem/gravam cada entidade em um arquivo `.txt` próprio dentro de `data/`.
+- [services/](src/services/): regras de aplicação que orquestram os repositórios (`AutenticacaoService`, `SecretariaService`, `MatriculaService`, `DisciplinaService`, `ProfessorService`) e a implementação de exemplo `SistemaCobrancaConsole`.
+- [ui/Menu.java](src/ui/Menu.java): interface de linha de comando que conecta os services aos usuários (Secretaria, Aluno, Professor), acionada a partir de [src/App.java](src/App.java).

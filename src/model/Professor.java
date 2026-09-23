@@ -14,6 +14,6 @@ public class Professor extends Usuario {
     }
 
     public List<Aluno> consultarAlunos(Disciplina d) {
-        return null;
+        return d.listarAlunosMatriculados();
     }
 }

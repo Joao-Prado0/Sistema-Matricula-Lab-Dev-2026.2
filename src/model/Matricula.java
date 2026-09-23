@@ -80,6 +80,13 @@ public class Matricula {
         this.sistemaCobranca = sistemaCobranca;
     }
 
+    // Instancias de Disciplina sao recriadas a cada leitura de arquivo, entao a
+    // comparacao precisa ser pelo codigo e nao por referencia.
+    private boolean mesmaDisciplina(Inscricao i, Disciplina d) {
+        return i.getDisciplina() != null && d != null
+                && i.getDisciplina().getCodigo().equals(d.getCodigo());
+    }
+
     private int contarPorTipo(TipoInscricao tipo) {
         int total = 0;
         for (Inscricao i : inscricoes) {
@@ -97,6 +104,11 @@ public class Matricula {
         if (d.estaLotada()) {
             throw new IllegalStateException("Disciplina " + d.getCodigo() + " esta lotada.");
         }
+        for (Inscricao i : inscricoes) {
+            if (!i.isCancelada() && mesmaDisciplina(i, d)) {
+                throw new IllegalStateException("Aluno ja inscrito na disciplina " + d.getCodigo() + ".");
+            }
+        }
         if (tipo == TipoInscricao.OBRIGATORIA && contarPorTipo(TipoInscricao.OBRIGATORIA) >= QTD_OBRIGATORIAS) {
             throw new IllegalStateException("Limite de " + QTD_OBRIGATORIAS + " disciplinas obrigatorias atingido.");
         }
@@ -113,7 +125,7 @@ public class Matricula {
             throw new IllegalStateException("Periodo de matricula fechado.");
         }
         for (Inscricao i : inscricoes) {
-            if (i.getDisciplina() == d && !i.isCancelada()) {
+            if (!i.isCancelada() && mesmaDisciplina(i, d)) {
                 i.cancelar();
                 if (sistemaCobranca != null) {
                     sistemaCobranca.notificarMatricula(this);

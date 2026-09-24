@@ -1,0 +1,4 @@
+Engenharia de Software|240
+Ciência da Computação|220
+Sistemas de Informação|200
+

@@ -2,9 +2,6 @@
 *.class
 /bin/
 
-# Dados de persistencia (arquivos TXT gerados em runtime)
-/data/
-
 # Log file
 *.log
 

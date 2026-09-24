@@ -1,0 +1,11 @@
+ES101|Laboratório de Desenvolvimento de Software|ATIVA|Engenharia de Software
+ES102|Projeto de Software|ATIVA|Engenharia de Software
+ES103|Arquitetura de Software|ATIVA|Engenharia de Software
+ES104|Banco de Dados|ATIVA|Engenharia de Software
+ES105|Inteligência Artificial|ATIVA|Engenharia de Software
+ES106|Computação em Nuvem|ATIVA|Engenharia de Software
+CC201|Algoritmos e Estruturas de Dados|ATIVA|Ciência da Computação
+CC202|Sistemas Operacionais|ATIVA|Ciência da Computação
+SI301|Gestão de Projetos de TI|ATIVA|Sistemas de Informação
+SI302|Governança de TI|ATIVA|Sistemas de Informação
+

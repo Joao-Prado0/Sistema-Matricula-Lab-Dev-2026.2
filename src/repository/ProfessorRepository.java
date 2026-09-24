@@ -8,7 +8,7 @@ import model.Professor;
 
 public class ProfessorRepository implements IArquivoRepository<Professor> {
 
-    private String caminhoArquivo = "data/professores.txt";
+    private String caminhoArquivo = "src/data/professores.txt";
 
     public ProfessorRepository() {
     }

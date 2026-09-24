@@ -1,12 +1,4 @@
 {
   "java.project.sourcePaths": ["src"],
-  "java.project.outputPath": "bin",
-  "java.jdt.ls.java.home": "C:\\Users\\Rafael\\.vscode\\extensions\\redhat.java-1.56.0-win32-x64\\jre\\21.0.12.1-win32-x86_64",
-  "java.configuration.runtimes": [
-    {
-      "name": "JavaSE-21",
-      "path": "C:\\Users\\Rafael\\.vscode\\extensions\\redhat.java-1.56.0-win32-x64\\jre\\21.0.12.1-win32-x86_64",
-      "default": true
-    }
-  ]
+  "java.project.outputPath": "bin"
 }

@@ -9,7 +9,7 @@ import model.PeriodoMatricula;
 
 public class PeriodoMatriculaRepository implements IArquivoRepository<PeriodoMatricula> {
 
-    private String caminhoArquivo = "data/periodos.txt";
+    private String caminhoArquivo = "src/data/periodos.txt";
 
     public PeriodoMatriculaRepository() {
     }

@@ -1,0 +1,7 @@
+2026001|João Prado|joao|1234|Engenharia de Software
+2026002|Filipe Gabriel|filipe|1234|Engenharia de Software
+2026003|Daniel Bony|daniel|1234|Engenharia de Software
+2026004|Rafael Henriques|rafael|1234|Engenharia de Software
+2026005|Ana Silva|ana|1234|Ciência da Computação
+2026006|Lucas Oliveira|lucas|1234|Sistemas de Informação
+

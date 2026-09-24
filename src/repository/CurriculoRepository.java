@@ -9,7 +9,7 @@ import model.Disciplina;
 
 public class CurriculoRepository implements IArquivoRepository<Curriculo> {
 
-    private String caminhoArquivo = "data/curriculos.txt";
+    private String caminhoArquivo = "src/data/curriculos.txt";
     private final DisciplinaRepository disciplinaRepository;
 
     public CurriculoRepository() {

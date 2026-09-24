@@ -35,14 +35,14 @@ public class Menu {
     private final SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
 
     private final CursoRepository cursoRepository = new CursoRepository();
-    private final DisciplinaRepository disciplinaRepository = new DisciplinaRepository("data/disciplinas.txt", cursoRepository);
-    private final CurriculoRepository curriculoRepository = new CurriculoRepository("data/curriculos.txt", disciplinaRepository);
-    private final AlunoRepository alunoRepository = new AlunoRepository("data/alunos.txt", cursoRepository);
+    private final DisciplinaRepository disciplinaRepository = new DisciplinaRepository("src/data/disciplinas.txt", cursoRepository);
+    private final CurriculoRepository curriculoRepository = new CurriculoRepository("src/data/curriculos.txt", disciplinaRepository);
+    private final AlunoRepository alunoRepository = new AlunoRepository("src/data/alunos.txt", cursoRepository);
     private final ProfessorRepository professorRepository = new ProfessorRepository();
     private final SecretariaRepository secretariaRepository = new SecretariaRepository();
     private final PeriodoMatriculaRepository periodoRepository = new PeriodoMatriculaRepository();
     private final MatriculaRepository matriculaRepository = new MatriculaRepository(
-            "data/matriculas.txt", alunoRepository, disciplinaRepository, periodoRepository);
+            "src/data/matriculas.txt", alunoRepository, disciplinaRepository, periodoRepository);
 
     private final SistemaCobranca sistemaCobranca = new SistemaCobrancaConsole();
 

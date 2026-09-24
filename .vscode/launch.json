@@ -3,17 +3,9 @@
   "configurations": [
     {
       "type": "java",
-      "name": "App",
-      "request": "launch",
-      "mainClass": "App",
-      "projectName": "Sistema-Matricula-Lab-Dev-2026.2_37a36830"
-    },
-    {
-      "type": "java",
       "name": "Launch App",
       "request": "launch",
       "mainClass": "App",
-      "projectName": "Sistema-Matricula-Lab-Dev-2026.2",
       "console": "integratedTerminal"
     }
   ]

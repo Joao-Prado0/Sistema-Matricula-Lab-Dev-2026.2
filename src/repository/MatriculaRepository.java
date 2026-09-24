@@ -15,7 +15,7 @@ import model.PeriodoMatricula;
 
 public class MatriculaRepository implements IArquivoRepository<Matricula> {
 
-    private String caminhoArquivo = "data/matriculas.txt";
+    private String caminhoArquivo = "src/data/matriculas.txt";
     private final AlunoRepository alunoRepository;
     private final DisciplinaRepository disciplinaRepository;
     private final PeriodoMatriculaRepository periodoRepository;

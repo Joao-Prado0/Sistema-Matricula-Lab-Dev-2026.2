@@ -8,7 +8,7 @@ import model.Secretaria;
 
 public class SecretariaRepository implements IArquivoRepository<Secretaria> {
 
-    private String caminhoArquivo = "data/secretarias.txt";
+    private String caminhoArquivo = "src/data/secretarias.txt";
 
     public SecretariaRepository() {
     }

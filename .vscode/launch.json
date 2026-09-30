@@ -6,7 +6,8 @@
       "name": "Launch App",
       "request": "launch",
       "mainClass": "App",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "preLaunchTask": "Compilar projeto"
     }
   ]
 }

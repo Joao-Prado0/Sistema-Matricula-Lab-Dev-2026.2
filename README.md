@@ -41,17 +41,21 @@ Este README documenta as entregas do **Lab01S01** (Modelo de Análise), **Lab01S
 
 ## Como executar o projeto
 
-```bash
+```powershell
 # Clonar o repositório
 git clone <url-do-repositorio>
 cd <nome-do-repositorio>
 
-# Compilar
-javac -d bin -encoding UTF-8 $(find src -name "*.java")
+# Compilar todos os arquivos Java (PowerShell/Windows)
+$sources = Get-ChildItem -Path src -Recurse -Filter *.java |
+  ForEach-Object { $_.FullName }
+javac -d bin -encoding UTF-8 $sources
 
 # Executar
 java -cp bin App
 ```
+
+No VS Code, use **Run and Debug** (`F5`) e selecione **Launch App**. Essa configuração executa a compilação automaticamente antes de iniciar o sistema. O botão **Run Java** exibido diretamente no arquivo `App.java` usa o compilador Java do VS Code e não executa o comando personalizado do terminal.
 
 Na primeira execução, um usuário de Secretaria padrão é criado automaticamente (login `secretaria`, senha `admin`). A partir do menu, a Secretaria pode cadastrar cursos, disciplinas, currículos, alunos, professores e abrir períodos de matrícula; alunos autenticados podem se matricular/cancelar/confirmar matrícula e consultar sua grade; professores podem consultar os alunos matriculados em suas disciplinas.
 

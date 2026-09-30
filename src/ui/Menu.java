@@ -10,7 +10,9 @@ import java.util.Scanner;
 import enums.TipoInscricao;
 import interfaces.SistemaCobranca;
 import model.Aluno;
+import model.Curriculo;
 import model.Disciplina;
+import model.PeriodoMatricula;
 import model.Professor;
 import model.Secretaria;
 import model.Usuario;
@@ -128,8 +130,7 @@ public class Menu {
                         System.out.println("Disciplina cadastrada.");
                         break;
                     case "3":
-                        System.out.print("Semestre (ex: 2026/2): ");
-                        String semestreCurriculo = scanner.nextLine();
+                        String semestreCurriculo = solicitarSemestre(false, false);
                         System.out.print("Codigos das disciplinas (separados por virgula): ");
                         List<String> codigos = Arrays.asList(scanner.nextLine().split(","));
                         secretariaService.gerarCurriculo(semestreCurriculo, codigos);
@@ -162,16 +163,14 @@ public class Menu {
                         System.out.println("Professor cadastrado.");
                         break;
                     case "6":
-                        System.out.print("Semestre (ex: 2026/2): ");
-                        String semestrePeriodo = scanner.nextLine();
+                        String semestrePeriodo = solicitarSemestre(false, false);
                         Date inicio = lerData("Data de inicio (yyyy-MM-dd): ");
                         Date fim = lerData("Data de fim (yyyy-MM-dd): ");
                         secretariaService.abrirPeriodoMatricula(semestrePeriodo, inicio, fim);
                         System.out.println("Periodo de matricula aberto.");
                         break;
                     case "7":
-                        System.out.print("Semestre a encerrar: ");
-                        String semestreEncerrar = scanner.nextLine();
+                        String semestreEncerrar = solicitarSemestre(true, false);
                         periodoRepository.atualizarEncerrado(semestreEncerrar, true);
                         disciplinaService.avaliarAtivacaoTurmas();
                         System.out.println("Periodo encerrado e disciplinas avaliadas.");
@@ -203,19 +202,15 @@ public class Menu {
             try {
                 switch (opcao) {
                     case "1": {
-                        System.out.print("Semestre (ex: 2026/2): ");
-                        String semestre = scanner.nextLine();
-                        System.out.print("Codigo da disciplina: ");
-                        String codigo = scanner.nextLine();
-                        System.out.print("Tipo (OBRIGATORIA/OPTATIVA): ");
-                        TipoInscricao tipo = TipoInscricao.valueOf(scanner.nextLine().trim().toUpperCase());
+                        String semestre = selecionarSemestreParaMatricula();
+                        String codigo = selecionarDisciplinaDoSemestre(semestre);
+                        TipoInscricao tipo = selecionarTipoInscricao();
                         matriculaService.realizarMatricula(aluno.getNumeroMatricula(), semestre, codigo, tipo);
                         System.out.println("Inscricao realizada.");
                         break;
                     }
                     case "2": {
-                        System.out.print("Semestre (ex: 2026/2): ");
-                        String semestre = scanner.nextLine();
+                        String semestre = solicitarSemestre(true, false);
                         System.out.print("Codigo da disciplina: ");
                         String codigo = scanner.nextLine();
                         matriculaService.cancelarInscricao(aluno.getNumeroMatricula(), semestre, codigo);
@@ -223,31 +218,36 @@ public class Menu {
                         break;
                     }
                     case "3": {
-                        System.out.print("Semestre (ex: 2026/2): ");
-                        String semestre = scanner.nextLine();
+                        String semestre = solicitarSemestre(true, false);
                         matriculaService.confirmarMatricula(aluno.getNumeroMatricula(), semestre);
                         System.out.println("Matricula confirmada.");
                         break;
                     }
                     case "4": {
-                        System.out.print("Semestre (ex: 2026/2): ");
-                        String semestre = scanner.nextLine();
+                        String semestre = solicitarSemestre(true, false);
                         matriculaService.cancelarMatricula(aluno.getNumeroMatricula(), semestre);
                         System.out.println("Matricula cancelada.");
                         break;
                     }
                     case "5": {
-                        System.out.print("Semestre (ex: 2026/2): ");
-                        String semestre = scanner.nextLine();
+                        String semestre = solicitarSemestre(true, false);
                         var matricula = matriculaRepository.buscarPorAlunoESemestre(aluno.getNumeroMatricula(), semestre);
                         if (matricula == null) {
-                            System.out.println("Nenhuma matricula encontrada.");
+                            System.out.println("Matricula vazia.");
                         } else {
                             System.out.println("Status: " + matricula.getStatus());
+                            boolean possuiDisciplinasAtivas = false;
                             for (var i : matricula.getInscricoes()) {
+                                if (i.isCancelada()) {
+                                    continue;
+                                }
+                                possuiDisciplinasAtivas = true;
                                 Disciplina d = i.getDisciplina();
                                 System.out.println(" - " + (d != null ? d.getCodigo() + " " + d.getNome() : "?")
-                                        + " | " + i.getTipo() + " | cancelada=" + i.isCancelada());
+                                        + " | " + i.getTipo());
+                            }
+                            if (!possuiDisciplinasAtivas) {
+                                System.out.println("Matricula vazia.");
                             }
                         }
                         break;
@@ -261,6 +261,78 @@ public class Menu {
             } catch (Exception e) {
                 System.out.println("Erro: " + e.getMessage());
             }
+        }
+    }
+
+    private String selecionarSemestreParaMatricula() {
+        return solicitarSemestre(true, true);
+    }
+
+    private String solicitarSemestre(boolean exigirSemestreCadastrado, boolean apenasPeriodosAbertos) {
+        while (true) {
+            List<PeriodoMatricula> periodos = periodoRepository.buscarTodos();
+            System.out.println("\nSemestres disponiveis:");
+            boolean existeOpcao = false;
+            for (PeriodoMatricula periodo : periodos) {
+                if (!apenasPeriodosAbertos || periodo.estaAberto()) {
+                    System.out.println(" - " + periodo.getSemestre()
+                            + (periodo.estaAberto() ? " (aberto)" : " (fechado)"));
+                    existeOpcao = true;
+                }
+            }
+            if (!existeOpcao && exigirSemestreCadastrado) {
+                throw new IllegalStateException("Nao ha semestres disponiveis para selecao.");
+            }
+
+            System.out.print(exigirSemestreCadastrado ? "Semestre: " : "Semestre (novo ou listado): ");
+            String semestre = scanner.nextLine().trim();
+            if (!exigirSemestreCadastrado && !semestre.isEmpty()) {
+                return semestre;
+            }
+            PeriodoMatricula periodo = periodoRepository.buscarPorSemestre(semestre);
+            if (periodo != null && (!apenasPeriodosAbertos || periodo.estaAberto())) {
+                return semestre;
+            }
+            System.out.println("Semestre invalido para esta operacao. Tente novamente.");
+        }
+    }
+
+    private TipoInscricao selecionarTipoInscricao() {
+        while (true) {
+            System.out.println("Tipo de inscricao:");
+            System.out.println("1) Obrigatoria");
+            System.out.println("2) Optativa");
+            System.out.print("Opcao: ");
+            String opcao = scanner.nextLine().trim();
+            if (opcao.equals("1")) {
+                return TipoInscricao.OBRIGATORIA;
+            }
+            if (opcao.equals("2")) {
+                return TipoInscricao.OPTATIVA;
+            }
+            System.out.println("Opcao invalida. Informe 1 para obrigatoria ou 2 para optativa.");
+        }
+    }
+
+    private String selecionarDisciplinaDoSemestre(String semestre) {
+        while (true) {
+            Curriculo curriculo = curriculoRepository.buscarPorSemestre(semestre);
+            if (curriculo == null || curriculo.getDisciplinas().isEmpty()) {
+                throw new IllegalStateException("Nao ha disciplinas cadastradas para o semestre " + semestre + ".");
+            }
+
+            System.out.println("\nDisciplinas do semestre " + semestre + ":");
+            for (Disciplina disciplina : curriculo.getDisciplinas()) {
+                System.out.println(" - " + disciplina.getCodigo() + " | " + disciplina.getNome());
+            }
+            System.out.print("Codigo da disciplina: ");
+            String codigo = scanner.nextLine().trim();
+            for (Disciplina disciplina : curriculo.getDisciplinas()) {
+                if (disciplina.getCodigo().equals(codigo)) {
+                    return codigo;
+                }
+            }
+            System.out.println("Codigo de disciplina invalido para o semestre selecionado. Tente novamente.");
         }
     }
 

@@ -347,8 +347,7 @@ public class Menu {
             try {
                 switch (opcao) {
                     case "1": {
-                        System.out.print("Codigo da disciplina: ");
-                        String codigo = scanner.nextLine();
+                        String codigo = selecionarDisciplinaParaConsulta();
                         List<Aluno> alunos = professorService.consultarAlunosNaDisciplina(codigo);
                         if (alunos.isEmpty()) {
                             System.out.println("Nenhum aluno matriculado.");
@@ -368,6 +367,28 @@ public class Menu {
             } catch (Exception e) {
                 System.out.println("Erro: " + e.getMessage());
             }
+        }
+    }
+
+    private String selecionarDisciplinaParaConsulta() {
+        while (true) {
+            List<Disciplina> disciplinas = disciplinaRepository.buscarTodos();
+            if (disciplinas.isEmpty()) {
+                throw new IllegalStateException("Nao ha disciplinas cadastradas.");
+            }
+
+            System.out.println("\nDisciplinas disponiveis:");
+            for (Disciplina disciplina : disciplinas) {
+                System.out.println(" - " + disciplina.getCodigo() + " | " + disciplina.getNome());
+            }
+            System.out.print("Codigo da disciplina: ");
+            String codigo = scanner.nextLine().trim();
+            for (Disciplina disciplina : disciplinas) {
+                if (disciplina.getCodigo().equals(codigo)) {
+                    return codigo;
+                }
+            }
+            System.out.println("Codigo de disciplina invalido. Tente novamente.");
         }
     }
 
